@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TeX Sprint — LaTeX 수식 입력 게임</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
+<style>
+:root{color-scheme:dark;--bg:#0c1221;--panel:#151e32;--line:#2a3753;--mint:#57edc0;--txt:#e8effe;--muted:#9baac5;--yellow:#ffcc76}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 15% 0%,#213553 0%,#0c1221 47%);color:var(--txt);font:16px system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}.wrap{max-width:900px;margin:0 auto;padding:38px 20px 48px}header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:26px}h1{font-size:35px;margin:0;letter-spacing:-1.4px}.brand{color:var(--mint)}.intro{color:var(--muted);margin-top:6px;font-size:14px}.tag{border:1px solid #34506a;border-radius:22px;padding:8px 13px;color:#b7d4e6;font-size:12px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}.stat,.panel{background:rgba(21,30,50,.95);border:1px solid var(--line);border-radius:18px}.stat{padding:14px 18px}.stat small{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:27px;margin-top:5px;font-variant-numeric:tabular-nums}.track{height:7px;border-radius:99px;background:#2c3852;overflow:hidden;margin-bottom:22px}.fill{background:linear-gradient(90deg,#5ee6bb,#7ab6ff);height:100%;width:100%;transition:width .2s}.panel{padding:25px;margin-bottom:16px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--mint);font-weight:800}.target{min-height:154px;display:flex;align-items:center;justify-content:center;font-size:31px;overflow-x:auto;padding:18px 4px}.level{color:var(--muted);font-size:13px;margin-top:12px}.inputbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}.inputbar label{font-weight:700}.small{font-size:12px;color:var(--muted)}textarea{width:100%;background:#0c1425;border:1px solid #41516d;border-radius:12px;padding:17px;color:var(--txt);font:17px ui-monospace,SFMono-Regular,Consolas,monospace;resize:vertical;min-height:94px;outline:none}textarea:focus{border-color:var(--mint);box-shadow:0 0 0 3px #57edc020}.preview{min-height:90px;display:flex;align-items:center;justify-content:center;background:#0c1425;border:1px dashed #34425e;border-radius:12px;margin-top:12px;padding:14px;overflow-x:auto;font-size:23px}.feedback{min-height:32px;padding-top:10px;color:var(--muted);font-size:13px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}button{background:#2c3b55;border:1px solid #445573;border-radius:10px;color:white;padding:11px 16px;font-size:14px;cursor:pointer;font-weight:650}button:hover{filter:brightness(1.15)}button:focus-visible{outline:2px solid var(--mint)}button.primary{background:var(--mint);border-color:var(--mint);color:#062b26}button:disabled{cursor:not-allowed;opacity:.4}.hint{color:var(--yellow);font-size:13px;min-height:24px;margin-top:7px}.help{color:var(--muted);font-size:13px;line-height:1.8}.help code{color:#cae6ff}.footer{margin-top:20px;color:#7486a6;font-size:12px}.end{position:fixed;inset:0;background:#050b18cf;display:none;align-items:center;justify-content:center;z-index:4;padding:20px}.end.show{display:flex}.modal{width:min(450px,100%);background:#17223a;border:1px solid #41516d;border-radius:24px;padding:36px;text-align:center;box-shadow:0 35px 100px #0009}.modal h2{font-size:28px}.modal .big{font-size:60px;font-weight:800;color:var(--mint);margin:15px}.toast-good{color:var(--mint)}.toast-bad{color:#ff9b9b}select{background:#233149;color:white;border:1px solid #455778;padding:9px;border-radius:9px}@media(max-width:560px){.wrap{padding:22px 13px}.stats{grid-template-columns:repeat(2,1fr)}.panel{padding:17px}.target{font-size:24px}h1{font-size:27px}.tag{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div><h1>TeX<span class="brand">Sprint</span> <span aria-hidden="true">⌁</span></h1><div class="intro">보이는 수식을 LaTeX 코드로 재현하세요. 제한 시간은 3분!</div></div><span class="tag">INSPIRED BY TEXNIQUE</span></header>
+<div class="stats"><div class="stat"><small>남은 시간</small><strong id="time">03:00</strong></div><div class="stat"><small>점수</small><strong id="score">0</strong></div><div class="stat"><small>정답</small><strong id="count">0</strong></div><div class="stat"><small>콤보</small><strong id="combo">×0</strong></div></div>
+<div class="track"><div id="fill" class="fill"></div></div>
+<section class="panel"><div class="inputbar"><div class="eyebrow">TARGET FORMULA</div><select id="difficulty" aria-label="난이도"><option value="all">모든 난이도</option><option value="easy">기초</option><option value="medium">중급</option><option value="hard">고급</option></select></div><div id="target" class="target" aria-label="목표 수식">시작 버튼을 눌러 주세요</div><div class="level" id="level">준비되면 시작하세요</div></section>
+<section class="panel"><div class="inputbar"><label for="answer">LaTeX 입력</label><span class="small">Enter 제출 · Shift+Enter 줄바꿈</span></div><textarea id="answer" spellcheck="false" autocomplete="off" placeholder="예: \frac{a}{b}" disabled></textarea><div class="eyebrow" style="margin-top:16px">LIVE PREVIEW</div><div class="preview" id="preview">입력한 수식이 여기에 표시됩니다</div><div id="feedback" class="feedback" aria-live="polite">정답은 수학적 동치가 아니라 렌더링 결과가 같은지 비교합니다.</div><div id="hint" class="hint"></div><div class="actions"><button class="primary" id="start">▶ 게임 시작</button><button id="submit" disabled>정답 제출 ↵</button><button id="hintBtn" disabled>힌트 (-5점)</button><button id="skip" disabled>건너뛰기</button></div></section>
+<div class="help">사용 예시: <code>\\frac{a}{b}</code> 분수 · <code>x^{2}</code> 제곱 · <code>\\sqrt{x}</code> 루트 · <code>\\sum_{i=1}^{n}</code> 합 · <code>\\alpha</code> 그리스 문자</div>
+<div class="footer">원작 아이디어: <a href="https://github.com/akshayravikumar/TeXnique" style="color:#a7d7f1" target="_blank" rel="noopener">TeXnique</a> · 이 게임은 별도로 작성한 오리지널 구현입니다. 수식 렌더링을 위해 인터넷 연결(KaTeX CDN)이 필요합니다.</div>
+</div>
+<div class="end" id="end"><div class="modal"><div class="eyebrow">TIME'S UP</div><h2>게임 종료!</h2><div class="big" id="finalScore">0</div><p id="finalDesc"></p><button class="primary" id="again">다시 도전하기</button></div></div>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"></script>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const problems = [
+ ['easy',String.raw`x^{2}+y^{2}=z^{2}`,'제곱은 ^ 기호를 사용합니다'],
+ ['easy',String.raw`\\frac{a}{b}`,'분수 명령: \frac{분자}{분모}'],
+ ['easy',String.raw`\\sqrt{x+1}`,'제곱근 명령: \sqrt{...}'],
+ ['easy',String.raw`\\alpha+\\beta=\\gamma`,'그리스 문자: \alpha'],
+ ['easy',String.raw`a_{1}+a_{2}+a_{3}`,'아래첨자는 _ 기호'],
+ ['easy',String.raw`\\pi r^{2}`,'원주율 기호는 \pi'],
+ ['easy',String.raw`\\infty`,'무한대: \infty'],
+ ['easy',String.raw`x \\neq y`,'같지 않음은 \neq'],
+ ['medium',String.raw`\\sum_{i=1}^{n}i`,'합은 \sum_{아래}^{위}'],
+ ['medium',String.raw`\\int_{0}^{1}x^{2}\\,dx`,'적분은 \int_{0}^{1}'],
+ ['medium',String.raw`\\lim_{x\\to 0}\\frac{\\sin x}{x}=1`,'극한은 \lim, 화살표는 \to'],
+ ['medium',String.raw`\\frac{-b\\pm\\sqrt{b^{2}-4ac}}{2a}`,'플러스마이너스는 \pm'],
+ ['medium',String.raw`\\binom{n}{k}`,'이항계수 명령은 \binom'],
+ ['medium',String.raw`\\vec{v}=\\langle x,y,z\\rangle`,'벡터는 \vec, 꺾쇠는 \langle'],
+ ['medium',String.raw`\\forall x\\in\\mathbb{R}`,'모든은 \forall, 실수는 \mathbb{R}'],
+ ['medium',String.raw`\\left|x-y\\right|`,'크기가 변하는 괄호는 \left 와 \right'],
+ ['hard',String.raw`\\begin{pmatrix}a&b\\\\c&d\\end{pmatrix}`,'행렬은 pmatrix 환경, 열은 &, 행은 \\\\'],
+ ['hard',String.raw`\\nabla\\cdot\\vec{F}=0`,'발산 연산자는 \nabla\cdot'],
+ ['hard',String.raw`e^{i\\pi}+1=0`,'오일러의 항등식'],
+ ['hard',String.raw`\\frac{\\partial f}{\\partial x}`,'편미분 기호는 \partial'],
+ ['hard',String.raw`\\prod_{k=1}^{n}k=n!`,'곱은 \prod'],
+ ['hard',String.raw`\\int_{-\\infty}^{\\infty}e^{-x^{2}}\\,dx=\\sqrt{\\pi}`,'가우스 적분'],
+ ['hard',String.raw`\\mathcal{L}\\{f(t)\\}=F(s)`,'필기체 대문자는 \mathcal'],
+ ['hard',String.raw`\\sum_{n=1}^{\\infty}\\frac{1}{n^{2}}=\\frac{\\pi^{2}}{6}`,'바젤 문제']
+].map(([difficulty,latex,hint])=>({difficulty,latex:latex.replace(/\\\\/g,'\\'),hint}));
+let started=false,timeLeft=180,score=0,count=0,combo=0,idx=-1,used=[],timer=null,hinted=false,round=0;
+function render(tex,el){if(!window.katex){el.textContent='수식 라이브러리를 불러올 수 없습니다. 인터넷 연결을 확인하세요.';return false}try{katex.render(tex,el,{throwOnError:false,displayMode:true,trust:false,strict:'ignore'});return true}catch(e){el.textContent=e.message;return false}}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function normalize(s){return s.trim().replace(/\s+/g,'').replace(/\\left|\\right/g,'').replace(/\\dfrac/g,'\\frac').replace(/\\tfrac/g,'\\frac')}
+function htmlMath(s){try{return katex.renderToString(s,{throwOnError:false,output:'html',displayMode:false,trust:false,strict:'ignore'}).replace(/<span class="katex-mathml">[\s\S]*?<\/span>/,'').replace(/<span class="strut"[^>]*><\/span>/g,'')}catch{return null}}
+// Compare normalized visible math markup. This accepts some equivalent KaTeX syntax,
+// but is intentionally not a symbolic algebra equivalence checker.
+function canonicalMath(s){let html=htmlMath(s);if(!html)return null;const root=document.createElement('div');root.innerHTML=html;root.querySelectorAll('span').forEach(el=>{el.removeAttribute('style');el.removeAttribute('aria-hidden')});root.querySelectorAll('svg,path').forEach(el=>el.remove());return root.textContent.replace(/\s+/g,' ').trim()+'|'+[...root.querySelectorAll('.frac-line,.sqrt-line,.vlist,.msupsub,.mfrac,.mord,.mop,.mrel')].map(e=>e.className).join(',')}
+function matches(user,target){if(normalize(user)===normalize(target))return true;return canonicalMath(user)!==null&&canonicalMath(user)===canonicalMath(target)}
+function refresh(){$('time').textContent=`${String(Math.floor(timeLeft/60)).padStart(2,'0')}:${String(timeLeft%60).padStart(2,'0')}`;$('score').textContent=score;$('count').textContent=count;$('combo').textContent='×'+combo;$('fill').style.width=(timeLeft/180*100)+'%'}
+function next(){const diff=$('difficulty').value;const eligible=problems.map((p,i)=>({...p,i})).filter(p=>diff==='all'||p.difficulty===diff);let choices=eligible.filter(p=>!used.includes(p.i));if(!choices.length){used=used.filter(i=>!eligible.some(p=>p.i===i));choices=eligible}const p=choices[Math.floor(Math.random()*choices.length)];idx=p.i;used.push(idx);round++;hinted=false;$('hint').textContent='';$('answer').value='';$('preview').textContent='입력한 수식이 여기에 표시됩니다';$('feedback').textContent='정답 수식을 입력하고 Enter를 누르세요.';render(p.latex,$('target'));$('level').textContent=`문제 ${round} · ${p.difficulty==='easy'?'기초':p.difficulty==='medium'?'중급':'고급'} 난이도`;$('answer').focus()}
+function stop(){if(!started)return;started=false;clearInterval(timer);$('answer').disabled=true;$('submit').disabled=true;$('hintBtn').disabled=true;$('skip').disabled=true;$('difficulty').disabled=false;$('start').textContent='▶ 새 게임';$('finalScore').textContent=score+'점';$('finalDesc').textContent=`${count}문제 정답 · 총 ${round}문제 도전`;$('end').classList.add('show')}
+function start(){clearInterval(timer);timeLeft=180;score=0;count=0;combo=0;round=0;used=[];started=true;$('end').classList.remove('show');$('answer').disabled=false;$('submit').disabled=false;$('hintBtn').disabled=false;$('skip').disabled=false;$('difficulty').disabled=true;$('start').textContent='↻ 게임 재시작';refresh();next();timer=setInterval(()=>{timeLeft--;refresh();if(timeLeft<=0)stop()},1000)}
+function submit(){if(!started)return;let val=$('answer').value.trim();if(!val){$('feedback').textContent='먼저 LaTeX 수식을 입력하세요.';return}if(matches(val,problems[idx].latex)){combo++;count++;let points=10+Math.min(combo-1,5)*2;score+=points;$('feedback').textContent=`✓ 정답! +${points}점`;refresh();next()}else{combo=0;score=Math.max(0,score-2);$('feedback').textContent='✗ 수식이 일치하지 않습니다. 다시 시도해 보세요. (-2점)';$('feedback').className='feedback toast-bad';refresh();setTimeout(()=>$('feedback').className='feedback',700)}}
+$('start').addEventListener('click',start);$('again').addEventListener('click',start);$('submit').addEventListener('click',submit);
+$('answer').addEventListener('input',()=>{const val=$('answer').value.trim();if(!val){$('preview').textContent='입력한 수식이 여기에 표시됩니다';return}render(val,$('preview'))});
+$('answer').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submit()}});
+$('hintBtn').addEventListener('click',()=>{if(!started)return;if(!hinted){score=Math.max(0,score-5);hinted=true;refresh()}$('hint').textContent='힌트: '+problems[idx].hint});
+$('skip').addEventListener('click',()=>{if(!started)return;combo=0;score=Math.max(0,score-3);refresh();next()});
+refresh();
+</script>
+</body></html>
